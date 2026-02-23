@@ -2,31 +2,31 @@
 
 ## Base URL
 
-| Ambiente    | URL                          |
-|-------------|------------------------------|
-| Produção    | `https://api.petkeep.com/`   |
-| Desenvolvimento | `http://localhost:8080/` |
+| Environment    | URL                          |
+|----------------|------------------------------|
+| Production     | `https://api.petkeep.com/`   |
+| Development    | `http://localhost:8080/`     |
 
-## Autenticação
+## Authentication
 
-Todas as rotas protegidas exigem o header:
+All protected routes require the header:
 ```
 Authorization: Bearer <access_token>
 ```
 
-Os tokens são obtidos via `/api/users/token/`.
+Tokens are obtained via `/api/users/token/`.
 
 ---
 
 ## Endpoints
 
-### Auth / Usuários
+### Auth / Users
 
-| Método | Rota                        | Descrição                          | Auth |
-|--------|-----------------------------|------------------------------------|------|
-| POST   | `/api/users/signup/customer/` | Cadastro de cliente              | Não  |
-| POST   | `/api/users/signup/petsitter/` | Cadastro de petsitter           | Não  |
-| POST   | `/api/users/token/`          | Obter access + refresh token      | Não  |
-| POST   | `/api/users/token/refresh/`  | Renovar access token              | Não  |
+| Method | Route                          | Description                     | Auth |
+|--------|--------------------------------|---------------------------------|------|
+| POST   | `/api/users/signup/customer/`  | Register a customer             | No   |
+| POST   | `/api/users/signup/petsitter/` | Register a petsitter            | No   |
+| POST   | `/api/users/token/`            | Obtain access + refresh token   | No   |
+| POST   | `/api/users/token/refresh/`    | Refresh access token            | No   |
 
-> Endpoints adicionais serão documentados conforme o desenvolvimento evolui.
+> Additional endpoints will be documented as development progresses.

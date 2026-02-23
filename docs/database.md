@@ -1,48 +1,48 @@
 # Database — PetKeep
 
-## Banco de Dados
+## Databases
 
-- **Desenvolvimento**: SQLite (`/backend/db.sqlite3`) — não versionado
-- **Produção**: PostgreSQL 15
+- **Development**: SQLite (`/backend/db.sqlite3`) — not versioned
+- **Production**: PostgreSQL 15
 
-## Modelos Principais
+## Main Models
 
-> Documentação em construção. Use `cd backend && python manage.py inspectdb` para inspecionar o schema atual.
+> Documentation in progress. Run `cd backend && python manage.py inspectdb` to inspect the current schema.
 
 ### User (CustomUser)
-| Campo       | Tipo        | Descrição                        |
-|-------------|-------------|----------------------------------|
-| id          | UUID / int  | Chave primária                   |
-| email       | EmailField  | Identificador único de login     |
-| name        | CharField   | Nome do usuário                  |
-| role        | CharField   | `customer` ou `petsitter`        |
-| created_at  | DateTime    | Data de criação                  |
+| Field       | Type        | Description                    |
+|-------------|-------------|--------------------------------|
+| id          | UUID / int  | Primary key                    |
+| email       | EmailField  | Unique login identifier        |
+| name        | CharField   | User full name                 |
+| role        | CharField   | `customer` or `petsitter`      |
+| created_at  | DateTime    | Creation timestamp             |
 
 ### AnimalType
-| Campo | Tipo      | Descrição           |
-|-------|-----------|---------------------|
-| id    | int       | Chave primária      |
-| name  | CharField | Ex.: Cão, Gato      |
+| Field | Type      | Description           |
+|-------|-----------|-----------------------|
+| id    | int       | Primary key           |
+| name  | CharField | e.g. Dog, Cat         |
 
 ### ServiceType
-| Campo | Tipo      | Descrição              |
-|-------|-----------|------------------------|
-| id    | int       | Chave primária         |
-| name  | CharField | Ex.: Passeio, Hospedagem |
+| Field | Type      | Description              |
+|-------|-----------|--------------------------|
+| id    | int       | Primary key              |
+| name  | CharField | e.g. Walk, Boarding      |
 
 ### PetSitter
-| Campo         | Tipo          | Descrição                          |
-|---------------|---------------|------------------------------------|
-| user          | FK → User     | Relacionamento 1:1                 |
-| about         | TextField     | Descrição do petsitter             |
-| animal_types  | M2M → AnimalType | Tipos de animais atendidos      |
-| service_types | M2M → ServiceType | Serviços oferecidos            |
+| Field         | Type              | Description                         |
+|---------------|-------------------|-------------------------------------|
+| user          | FK → User         | 1:1 relationship                    |
+| about         | TextField         | Petsitter bio                       |
+| animal_types  | M2M → AnimalType  | Animal types the petsitter handles  |
+| service_types | M2M → ServiceType | Services offered                    |
 
 ## Migrations
 
-As migrations Django ficam em `/backend/apps/<app>/migrations/`.
+Django migrations are located at `/backend/apps/<app>/migrations/`.
 
-Para aplicar:
+To apply:
 ```bash
 cd infra && docker compose run --rm backend python manage.py migrate
 ```

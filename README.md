@@ -1,27 +1,27 @@
 # PetKeep App
 
-Monorepo do projeto PetKeep — plataforma de conexão entre tutores de animais e petsitters.
+Monorepo for the PetKeep project — a platform connecting pet owners with petsitters.
 
-## Estrutura
+## Structure
 
 ```
 petkeep-app/
-├── backend/   # API REST (Django + PostgreSQL)
-├── mobile/    # Aplicativo mobile (React Native / Expo)
-├── infra/     # Infraestrutura (Docker Compose, Nginx)
-└── docs/      # Documentação
-    ├── arquitetura.md
+├── backend/   # REST API (Django + PostgreSQL)
+├── mobile/    # Mobile app (React Native / Expo)
+├── infra/     # Infrastructure (Docker Compose, Nginx)
+└── docs/      # Documentation
+    ├── architecture.md
     ├── database.md
     └── api.md
 ```
 
-## Pré-requisitos
+## Prerequisites
 
 - Docker & Docker Compose
 - Node.js >= 18 + npm
-- Python >= 3.10 (para desenvolvimento local sem Docker)
+- Python >= 3.10 (for local development without Docker)
 
-## Como rodar
+## Getting Started
 
 ### Backend (via Docker)
 
@@ -30,7 +30,7 @@ cd infra
 docker compose up --build
 ```
 
-API disponível em `http://localhost:8080`.
+API available at `http://localhost:8080`.
 
 ### Mobile
 
@@ -40,9 +40,9 @@ npm install
 npx expo start
 ```
 
-## Documentação
+## Documentation
 
-Consulte a pasta [`/docs`](./docs) para detalhes sobre:
-- [Arquitetura](./docs/arquitetura.md)
-- [Banco de dados](./docs/database.md)
+See the [`/docs`](./docs) folder for details on:
+- [Architecture](./docs/architecture.md)
+- [Database](./docs/database.md)
 - [API](./docs/api.md)
