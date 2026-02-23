@@ -1,0 +1,39 @@
+# ── Python / Django ──────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+.venv-petkeep/
+venv/
+ENV/
+
+# Django
+backend/db.sqlite3
+backend/media/
+backend/staticfiles/
+backend/.env
+
+# ── Node / Expo ───────────────────────────────────────────────
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/.env
+
+# ── OS / Editor ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+*.swo
+
+# ── Misc ──────────────────────────────────────────────────────
+*.log
+*.sqlite3
