@@ -32,7 +32,7 @@ help:
 	@echo "    make shell           Open Django shell"
 	@echo "    make superuser       Create a Django superuser"
 	@echo "    make collectstatic   Collect static files"
-	@echo "    make test-backend    Run backend test suite"
+	@echo "    make test-backend    Run backend test suite (Django test runner)"
 	@echo "    make lint-backend    Run flake8 on backend code"
 	@echo "    make exec            Open bash inside the backend container"
 	@echo "    make exec-db         Open psql inside the database container"
@@ -91,7 +91,7 @@ collectstatic:
 	$(COMPOSE) exec backend python manage.py collectstatic --noinput
 
 test-backend:
-	$(COMPOSE) exec backend pytest
+	$(COMPOSE) exec backend python manage.py test apps --settings=config.test_settings --verbosity=2
 
 lint-backend:
 	$(COMPOSE) exec backend flake8 .
