@@ -27,6 +27,24 @@ export const Colors = {
   },
 };
 
+/** PetKeep brand palette */
+export const Brand = {
+  primary: '#7C3AED',          // violet-600
+  primaryDark: '#5B21B6',      // violet-800
+  primaryLight: '#8B5CF6',     // violet-500
+  gradientStart: '#6D28D9',    // violet-700
+  gradientEnd: '#7C3AED',      // violet-600
+  success: '#10B981',          // emerald-500
+  successLight: '#D1FAE5',
+  surface: '#F5F3FF',          // violet-50
+  text: '#111827',
+  textSecondary: '#6B7280',
+  textMuted: '#9CA3AF',
+  border: '#E5E7EB',
+  white: '#FFFFFF',
+  cardBg: '#FFFFFF',
+};
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */

@@ -6,6 +6,7 @@ from rest_framework.authtoken.models import Token
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter
 from django.contrib.auth import login, logout
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from .serializers import (
     LoginSerializer,
     UserSerializer,
@@ -488,20 +489,51 @@ class PetSitterSignupView(generics.CreateAPIView):
 
 class PetSitterListView(generics.ListAPIView):
     """
-    API endpoint for listing all petsitters.
-    
-    Requires authentication. Returns a paginated list of all petsitters.
+    API endpoint for listing petsitters.
+
+    Supports filtering via query params:
+      - search: matches full_name or location (case-insensitive)
+      - animal_type: comma-separated values (dog, cat, bird, rabbit, chicken, hamster, other)
+      - service_type: comma-separated values (keepsitter, keephost, keepwalk)
     """
-    
+
     serializer_class = PetSitterSerializer
     permission_classes = [IsAuthenticated]
-    queryset = PetSitter.objects.select_related('user').prefetch_related(
-        'animal_types', 'service_types'
-    ).all()
-    
+
+    def get_queryset(self):
+        qs = PetSitter.objects.select_related('user').prefetch_related(
+            'animal_types', 'service_types'
+        ).all()
+
+        search = self.request.query_params.get('search', '').strip()
+        animal_type = self.request.query_params.get('animal_type', '').strip()
+        service_type = self.request.query_params.get('service_type', '').strip()
+
+        if search:
+            qs = qs.filter(
+                Q(user__full_name__icontains=search) | Q(location__icontains=search)
+            )
+
+        if animal_type:
+            types = [t.strip() for t in animal_type.split(',') if t.strip()]
+            if types:
+                qs = qs.filter(animal_types__animal_type__in=types)
+
+        if service_type:
+            services = [s.strip() for s in service_type.split(',') if s.strip()]
+            if services:
+                qs = qs.filter(service_types__service_type__in=services)
+
+        return qs.distinct()
+
     @extend_schema(
-        summary="List all petsitters",
-        description="Retrieve a paginated list of all registered petsitters.",
+        summary="List petsitters",
+        description="Retrieve a list of petsitters. Optionally filter by search (name/location), animal_type, or service_type.",
+        parameters=[
+            OpenApiParameter(name='search', description='Search by name or location', required=False, type=str),
+            OpenApiParameter(name='animal_type', description='Comma-separated animal types (dog, cat, bird, rabbit, chicken, hamster, other)', required=False, type=str),
+            OpenApiParameter(name='service_type', description='Comma-separated service types (keepsitter, keephost, keepwalk)', required=False, type=str),
+        ],
         responses={
             200: OpenApiResponse(
                 response=PetSitterSerializer(many=True),

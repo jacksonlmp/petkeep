@@ -11,8 +11,11 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
+import { api } from '@/services/api';
 
 interface LoginForm {
   email: string;
@@ -22,6 +25,7 @@ interface LoginForm {
 export default function LoginScreen() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
@@ -31,14 +35,24 @@ export default function LoginScreen() {
     defaultValues: { email: '', password: '' },
   });
 
-  const onSubmit = (data: LoginForm) => {
-    console.log('Login:', data);
-    router.replace('/(tabs)');
+  const onSubmit = async (data: LoginForm) => {
+    setIsLoading(true);
+    try {
+      await api.auth.login({ email: data.email, password: data.password });
+      router.replace('/(tabs)');
+    } catch (err: any) {
+      const message =
+        err?.non_field_errors?.[0] ??
+        err?.detail ??
+        'Credenciais inválidas. Tente novamente.';
+      Alert.alert('Erro ao entrar', message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
-    console.log('Google login');
-    router.replace('/(tabs)');
+    console.log('Google login — not implemented yet');
   };
 
   return (
@@ -203,12 +217,18 @@ export default function LoginScreen() {
 
                 <Pressable
                   onPress={handleSubmit(onSubmit)}
+                  disabled={isLoading}
                   style={({ pressed }) => [
                     styles.submitButton,
                     pressed && styles.submitButtonPressed,
+                    isLoading && styles.submitButtonDisabled,
                   ]}
                 >
-                  <Text style={styles.submitText}>Entrar</Text>
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={styles.submitText}>Entrar</Text>
+                  )}
                 </Pressable>
 
                 <View style={styles.signupRow}>
@@ -403,6 +423,9 @@ const styles = StyleSheet.create({
   },
   submitButtonPressed: {
     backgroundColor: '#4338ca',
+  },
+  submitButtonDisabled: {
+    opacity: 0.6,
   },
   submitText: {
     fontSize: 16,
