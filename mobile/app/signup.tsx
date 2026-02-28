@@ -37,7 +37,7 @@ export default function SignupTypeScreen() {
 
           <Pressable
             style={({ pressed }) => [styles.option, pressed && styles.optionPressed]}
-            onPress={() => router.push('/signup-petsitter')}
+            onPress={() => router.push('/petsitter-welcome')}
           >
             <View style={[styles.iconContainer, styles.iconPetsitter]}>
               <MaterialCommunityIcons name="dog" size={28} color="#7c3aed" />
