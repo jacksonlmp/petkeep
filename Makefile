@@ -1,6 +1,6 @@
 .PHONY: help \
         up up-prod down restart build rebuild logs logs-db ps clean \
-        migrate makemigrations shell superuser collectstatic test-backend lint-backend exec exec-db \
+        migrate makemigrations shell superuser collectstatic test test-backend lint lint-backend exec exec-db \
         mobile-install mobile-start mobile-android mobile-ios mobile-web
 
 # ── Variables ─────────────────────────────────────────────────────────────────
@@ -33,6 +33,7 @@ help:
 	@echo "    make superuser       Create a Django superuser"
 	@echo "    make collectstatic   Collect static files"
 	@echo "    make test-backend    Run backend test suite (Django test runner)"
+	@echo "    make lint            Run isort + black + flake8 on backend code"
 	@echo "    make lint-backend    Run flake8 on backend code"
 	@echo "    make exec            Open bash inside the backend container"
 	@echo "    make exec-db         Open psql inside the database container"
@@ -90,8 +91,11 @@ superuser:
 collectstatic:
 	$(COMPOSE) exec backend python manage.py collectstatic --noinput
 
-test-backend:
+test:
 	$(COMPOSE) exec backend python manage.py test apps --settings=config.test_settings --verbosity=2
+
+lint:
+	$(COMPOSE) exec backend bash -lc "isort . && black . && flake8 ."
 
 lint-backend:
 	$(COMPOSE) exec backend flake8 .

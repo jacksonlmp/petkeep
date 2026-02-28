@@ -13,7 +13,6 @@ exclude = '''
 [tool.isort]
 profile = "black"
 line_length = 88
-skip_gitignore = true
 known_django = "django"
 sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 
