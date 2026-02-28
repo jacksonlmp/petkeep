@@ -10,9 +10,13 @@ ENV PYTHONUNBUFFERED=1 \
 # Criar diretório de trabalho
 WORKDIR /app
 
+# Permite instalar dependências de dev (lint/test) no build de dev
+ARG INSTALL_DEV=false
+
 # Instalar dependências do sistema necessárias para PostgreSQL
 RUN apt-get update && apt-get install -y \
     postgresql-client \
+    git \
     gcc \
     python3-dev \
     musl-dev \
@@ -20,12 +24,14 @@ RUN apt-get update && apt-get install -y \
     netcat-traditional \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar apenas requirements primeiro (para cache de layer)
+# Copiar requirements primeiro (para cache de layer)
 COPY requirements.txt .
+COPY requirements-dev.txt .
 
 # Instalar dependências Python
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && \
+    if [ "$INSTALL_DEV" = "true" ]; then pip install -r requirements-dev.txt; fi
 
 # Copiar o projeto
 COPY . .
