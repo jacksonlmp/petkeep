@@ -1,0 +1,55 @@
+name: Check Branch Sync
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+      - beta
+
+permissions:
+  contents: read
+
+jobs:
+  check-branch-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if branch is up to date
+        shell: bash
+        run: |
+          BASE_BRANCH="${{ github.base_ref }}"
+          HEAD_BRANCH="${{ github.head_ref }}"
+
+          echo "🔍 Checking if '$HEAD_BRANCH' is up to date with '$BASE_BRANCH'"
+
+          git fetch origin
+
+          MERGE_BASE=$(git merge-base "origin/$BASE_BRANCH" "origin/$HEAD_BRANCH")
+          echo "Common ancestor: $MERGE_BASE"
+
+          BASE_COMMIT=$(git rev-parse "origin/$BASE_BRANCH")
+          echo "Latest commit in $BASE_BRANCH: $BASE_COMMIT"
+
+          COMMITS_BEHIND=$(git rev-list --count "$MERGE_BASE..origin/$BASE_BRANCH")
+          echo "Commits in $BASE_BRANCH since common ancestor: $COMMITS_BEHIND"
+
+          if [ "$COMMITS_BEHIND" -eq 0 ]; then
+            echo ""
+            echo "✅ Branch '$HEAD_BRANCH' is up to date with '$BASE_BRANCH'"
+            exit 0
+          fi
+
+          echo ""
+          echo "❌ Branch '$HEAD_BRANCH' is $COMMITS_BEHIND commits behind '$BASE_BRANCH'"
+          echo ""
+          echo "Recent commits in '$BASE_BRANCH' that are missing from '$HEAD_BRANCH':"
+          git log --oneline --no-merges "$MERGE_BASE..origin/$BASE_BRANCH" | head -10
+          echo ""
+          echo "Update your branch by merging or rebasing '$BASE_BRANCH'."
+          exit 1
+
